@@ -72,7 +72,8 @@ public class EarthquakeCityMap extends PApplet {
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
-		MapUtils.createDefaultEventDispatcher(this, map);
+		
+		MapUtils.createDefaultEventDispatcher(this, map);//This refers to PApplet, how does this work from a memory model perspective?
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
@@ -170,10 +171,15 @@ public class EarthquakeCityMap extends PApplet {
 		// If isInCountry ever returns true, isLand should return true.
 		for (Marker m : countryMarkers) {
 			// TODO: Finish this method using the helper method isInCountry
+			if (isInCountry(earthquake, m)) {
+				
+				return true;
+			}
+			
+				
+				
 			
 		}
-		
-		
 		// not inside any country
 		return false;
 	}
@@ -189,7 +195,43 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// One (inefficient but correct) approach is to:
 		//   Loop over all of the countries, e.g. using 
-		//        for (Marker cm : countryMarkers) { ... }
+		int quakeCounterOcean = 0;
+		for (Marker cm : countryMarkers) {
+			String name = (String)cm.getProperty("name");
+		
+			int quakeCounter = 0;
+			for(Marker qm : quakeMarkers) {
+				EarthquakeMarker em = (EarthquakeMarker)qm;
+				if(em.isOnLand()) {
+					String country = (String)em.getProperty("country");
+					if (country.equals(name)) {
+						
+						quakeCounter += 1;
+						
+					}
+						
+					
+				}
+				
+				else {
+					
+					quakeCounterOcean +=1;
+				}
+			
+			}
+			if (quakeCounter > 1) {
+				
+				System.out.println(name + " " + quakeCounter );
+				
+			 
+				
+			}
+		
+
+		
+		}
+		System.out.println("Oceans " + quakeCounterOcean );
+
 		//        
 		//      Inside the loop, first initialize a quake counter.
 		//      Then loop through all of the earthquake
