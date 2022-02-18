@@ -34,7 +34,7 @@ public class OceanQuakeMarker extends EarthquakeMarker {
 		
 		pg.pushStyle();	
 		float rad= (float) this.getProperty("radius");
-		pg.rect(x, y, rad, rad);
+		pg.rect((x-rad/2),(y-rad/2), rad, rad);
 		pg.popStyle();
 		
 	}
