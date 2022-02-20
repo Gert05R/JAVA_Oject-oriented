@@ -113,6 +113,10 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
+	    /*for (Marker qm : quakeMarkers) {
+			System.out.println(qm.getProperties());
+			}*/
+	    
 	}  // End setup
 	
 	
@@ -122,6 +126,9 @@ public class EarthquakeCityMap extends PApplet {
 		addKey();
 		
 	}
+	
+	
+	
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.
@@ -146,7 +153,27 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
-	}
+		for (Marker mk: markers) {
+		if (mk.isInside(map, mouseX, mouseY)) {
+			
+			lastSelected = (CommonMarker) mk;
+			
+			
+			if (lastSelected.isSelected()) {
+				lastSelected.setSelected(true);
+				
+			}
+				
+				
+			}
+			
+			
+			
+			
+		}
+		}
+		
+	
 	
 	/** The event handler for mouse clicks
 	 * It will display an earthquake and its threat circle of cities
@@ -314,5 +341,6 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		return false;
 	}
+		
 
 }
