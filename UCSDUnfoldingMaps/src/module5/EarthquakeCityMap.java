@@ -11,11 +11,14 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.providers.AbstractMapProvider;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PFont;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -62,6 +65,8 @@ public class EarthquakeCityMap extends PApplet {
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
 	
+	//public PFont f; 
+	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
@@ -70,7 +75,9 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			AbstractMapProvider provider = new Microsoft.RoadProvider();
+			//AbstractMapProvider provider = new Google.GoogleMapProvider();
+			map = new UnfoldingMap(this, 200, 50, 650, 600, provider);
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -116,6 +123,7 @@ public class EarthquakeCityMap extends PApplet {
 	    /*for (Marker qm : quakeMarkers) {
 			System.out.println(qm.getProperties());
 			}*/
+	    //f = createFont("Arial",16,true);
 	    
 	}  // End setup
 	
@@ -153,24 +161,23 @@ public class EarthquakeCityMap extends PApplet {
 	private void selectMarkerIfHover(List<Marker> markers)
 	{
 		// TODO: Implement this method
-		for (Marker mk: markers) {
-		if (mk.isInside(map, mouseX, mouseY)) {
-			
-			lastSelected = (CommonMarker) mk;
+			 if(lastSelected!=null)
+				return;
 			
 			
-			if (lastSelected.isSelected()) {
-				lastSelected.setSelected(true);
-				
+			else
+			{
+				for(Marker temp: markers)
+				{
+					if(temp.isInside(map,mouseX,mouseY))
+					{   lastSelected=(CommonMarker)temp;
+						lastSelected.setSelected(true);
+						return;}
+				}
 			}
+					
 				
-				
-			}
-			
-			
-			
-			
-		}
+		
 		}
 		
 	
