@@ -67,6 +67,7 @@ public class EarthquakeCityMap extends PApplet {
 	private CommonMarker lastClicked;
 	
 	//public PFont f; 
+	private CommonMarker temp;
 	
 	
 	public void setup() {		
@@ -214,37 +215,84 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		
 		
+		
 		if (lastClicked == null) 
 		{
 			
 			setClicked();
-			//System.out.println("Test1");
-			
+			if (quakeMarkers.contains(lastClicked)) 
+			{
+				
+				double dist = ((EarthquakeMarker) lastClicked).threatCircle();
+				
+				for(Marker marker : cityMarkers) 
+				{
+					Location a = marker.getLocation();
+					double d = lastClicked.getDistanceTo(a);
+					if (d < dist) 
+					{
+								
+						((CommonMarker) marker).setHidden(false);
+					}
+					else 
+						{
+						((CommonMarker) marker).setHidden(true); 
+						}	
+				}
+				
+			}
+			if (cityMarkers.contains(lastClicked)) 
+			{
+				
+				
+				
+				for(Marker marker : quakeMarkers) 
+				{
+					double dist = ((EarthquakeMarker) marker).threatCircle();
+					Location a = marker.getLocation();
+					double d = lastClicked.getDistanceTo(a);
+					if (d < dist) 
+					{
+								
+						((CommonMarker) marker).setHidden(false);
+					}
+					else 
+						{
+						((CommonMarker) marker).setHidden(true); 
+						}	
+				}
+				
+			}
 		}
 		
 		else 
 		{
 			unhideMarkers();
 			lastClicked = null;
+			}
 			//System.out.println("Test2");
-			
 
-		}
 	}
-	
+		
+
 	private CommonMarker setClicked() {
 		
 		
 		for(Marker marker : quakeMarkers) 
 		{
+		
+		
 			if (((CommonMarker) marker).getClicked()) 
 			{
 				//System.out.println("Test3");
 				lastClicked = (CommonMarker) marker;
-				//lastClicked.setClicked(true);
+				lastClicked.setClicked(true);
 				return lastClicked;
 			}
-			else {hideMarkers();}
+			
+			else {
+				hideMarkers();
+			}
 			
 		}
 			
@@ -254,7 +302,7 @@ public class EarthquakeCityMap extends PApplet {
 			{
 				//System.out.println("Test33");
 				lastClicked = (CommonMarker) marker;
-				//lastClicked.setClicked(true);
+				lastClicked.setClicked(true);
 				return lastClicked;
 			}
 			else {hideMarkers();}
@@ -265,18 +313,20 @@ public class EarthquakeCityMap extends PApplet {
 	private void hideMarkers() 
 	{
 		for(Marker marker : quakeMarkers) 
-		{
-			marker.setHidden(true);
+		{ 
 			
-			/*if ((boolean) ((CommonMarker) marker).getClicked()) 
+			
+			if ((boolean) ((CommonMarker) marker).getClicked()) 
 			{
 				marker.setHidden(false);
-				System.out.println("Test4");
+				//System.out.println("Test4");
+				
 			}
-			else {marker.setHidden(true);
-			//System.out.println("Test7");
+			else {
 			
-			}*/
+				marker.setHidden(true);
+			
+		}
 			
 			
 		}

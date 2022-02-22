@@ -32,6 +32,7 @@ public abstract class CommonMarker extends SimplePointMarker {
 	public void setClicked(boolean state) {
 		clicked = state;
 	}
+
 	
 	// Common piece of drawing method for markers; 
 	// Note that you should implement this by making calls 
