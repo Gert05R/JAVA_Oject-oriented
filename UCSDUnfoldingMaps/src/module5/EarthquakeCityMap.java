@@ -193,112 +193,104 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
-		
-		if ( lastClicked == null) {
-			isClicked(quakeMarkers);
+		for(Marker marker : quakeMarkers) {
 			
-			for (Marker qm : quakeMarkers) {
+			if (marker.isSelected()) {
 				
-				//
-				//lastClicked = (CommonMarker) qm;
-				hideMarkers(lastClicked, quakeMarkers);
-				lastClicked.setHidden(false);
-				//System.out.println("test6");
-				
-				
-			} 
-			isClicked(cityMarkers);
-			
-			for (Marker cm : cityMarkers) {
-				
-				//isClicked(cm);
-				//lastClicked = (CommonMarker) cm;
-				lastClicked.setHidden(false);
-				hideMarkers(lastClicked, cityMarkers);
-				//System.out.println("test7");
-				
-			} 
-			
-
-		}
-		else {
-			for (Marker qm : quakeMarkers) {
-				
-				//isClicked(qm);
-				//lastClicked = (CommonMarker) qm;
-				showMarkers(lastClicked, quakeMarkers);
-				lastClicked.setHidden(false);
-				lastClicked = null;
-				//System.out.println("test8");
-			} 
-			
-			for (Marker cm : cityMarkers) {
-				
-				//isClicked(cm);
-				//lastClicked = (CommonMarker) cm;
-				showMarkers(lastClicked, cityMarkers);
-				lastClicked.setHidden(false);
-				lastClicked = null;
-				//System.out.println("test9");
-			} 
-			
+				((CommonMarker) marker).setClicked(true);
+			}
+			else {((CommonMarker) marker).setClicked(false); }
 			
 		}
-	}
 		
-	
-	private void showMarkers(CommonMarker LC, List<Marker> markers) 
-	{
-		/*
-		for (Marker qm : markers) 
+		for(Marker marker : cityMarkers) {
+			
+			if (marker.isSelected()) {
+				
+				((CommonMarker) marker).setClicked(true);
+			}
+			else {((CommonMarker) marker).setClicked(false); }
+			
+		}
+		
+		
+		if (lastClicked == null) 
 		{
-			if (LC.getClicked()) {
-				LC.setHidden(false);
-				System.out.println("test3");
-			}
-			else {
-				qm.setHidden(false);
-				System.out.println("test4");
-			}
-		}*/
-	}
+			
+			setClicked();
+			//System.out.println("Test1");
+			
+		}
 		
-	private void hideMarkers(CommonMarker LC, List<Marker> markers) 
-	{
-		
-		for (Marker qm : markers) 
+		else 
 		{
-			if (LC.getClicked()) {
-				LC.setHidden(false);
-				qm.setHidden(true);
-				//System.out.println("test");
-			}
-			else {
-				qm.setHidden(true);
-				//System.out.println("test2");
-			}
-		}
-		
-	}
-		
-	
-	
-	
-	private void isClicked (List<Marker> markers) {
-		for (Marker mk : markers) {
-		lastClicked = (CommonMarker) mk;
-		if (lastClicked.isSelected()) {
-			if (lastClicked.getClicked()) {
-				lastClicked.setClicked(true);
-				System.out.println("testLastclicked");
-		}
-		}
+			unhideMarkers();
+			lastClicked = null;
+			//System.out.println("Test2");
+			
+
 		}
 	}
 	
+	private CommonMarker setClicked() {
+		
+		
+		for(Marker marker : quakeMarkers) 
+		{
+			if (((CommonMarker) marker).getClicked()) 
+			{
+				//System.out.println("Test3");
+				lastClicked = (CommonMarker) marker;
+				//lastClicked.setClicked(true);
+				return lastClicked;
+			}
+			else {hideMarkers();}
+			
+		}
+			
+		for(Marker marker : cityMarkers) 
+		{
+			if (((CommonMarker) marker).getClicked()) 
+			{
+				//System.out.println("Test33");
+				lastClicked = (CommonMarker) marker;
+				//lastClicked.setClicked(true);
+				return lastClicked;
+			}
+			else {hideMarkers();}
+		}
+		return null;
+	}
 	
-
-
+	private void hideMarkers() 
+	{
+		for(Marker marker : quakeMarkers) 
+		{
+			marker.setHidden(true);
+			
+			/*if ((boolean) ((CommonMarker) marker).getClicked()) 
+			{
+				marker.setHidden(false);
+				System.out.println("Test4");
+			}
+			else {marker.setHidden(true);
+			//System.out.println("Test7");
+			
+			}*/
+			
+			
+		}
+		for(Marker marker : cityMarkers) 
+		{
+			if ((boolean) ((CommonMarker) marker).getClicked()) 
+			{
+				marker.setHidden(false);
+			}
+			else {marker.setHidden(true);}
+		}
+		
+	}
+	
 
 	// loop over and unhide all markers
 	private void unhideMarkers() {
