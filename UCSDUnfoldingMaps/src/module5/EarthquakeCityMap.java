@@ -19,6 +19,7 @@ import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
 import processing.core.PFont;
+import processing.core.PGraphics;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -67,9 +68,11 @@ public class EarthquakeCityMap extends PApplet {
 	
 	//public PFont f; 
 	
+	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
 		size(900, 700, OPENGL);
+		
 		if (offline) {
 		    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
@@ -132,11 +135,8 @@ public class EarthquakeCityMap extends PApplet {
 		background(0);
 		map.draw();
 		addKey();
-		
+		//System.out.println(lastClicked);
 	}
-	
-	
-	
 	
 	/** Event handler that gets called automatically when the 
 	 * mouse moves.
@@ -193,9 +193,113 @@ public class EarthquakeCityMap extends PApplet {
 		// TODO: Implement this method
 		// Hint: You probably want a helper method or two to keep this code
 		// from getting too long/disorganized
+		
+		if ( lastClicked == null) {
+			isClicked(quakeMarkers);
+			
+			for (Marker qm : quakeMarkers) {
+				
+				//
+				//lastClicked = (CommonMarker) qm;
+				hideMarkers(lastClicked, quakeMarkers);
+				lastClicked.setHidden(false);
+				//System.out.println("test6");
+				
+				
+			} 
+			isClicked(cityMarkers);
+			
+			for (Marker cm : cityMarkers) {
+				
+				//isClicked(cm);
+				//lastClicked = (CommonMarker) cm;
+				lastClicked.setHidden(false);
+				hideMarkers(lastClicked, cityMarkers);
+				//System.out.println("test7");
+				
+			} 
+			
+
+		}
+		else {
+			for (Marker qm : quakeMarkers) {
+				
+				//isClicked(qm);
+				//lastClicked = (CommonMarker) qm;
+				showMarkers(lastClicked, quakeMarkers);
+				lastClicked.setHidden(false);
+				lastClicked = null;
+				//System.out.println("test8");
+			} 
+			
+			for (Marker cm : cityMarkers) {
+				
+				//isClicked(cm);
+				//lastClicked = (CommonMarker) cm;
+				showMarkers(lastClicked, cityMarkers);
+				lastClicked.setHidden(false);
+				lastClicked = null;
+				//System.out.println("test9");
+			} 
+			
+			
+		}
+	}
+		
+	
+	private void showMarkers(CommonMarker LC, List<Marker> markers) 
+	{
+		/*
+		for (Marker qm : markers) 
+		{
+			if (LC.getClicked()) {
+				LC.setHidden(false);
+				System.out.println("test3");
+			}
+			else {
+				qm.setHidden(false);
+				System.out.println("test4");
+			}
+		}*/
+	}
+		
+	private void hideMarkers(CommonMarker LC, List<Marker> markers) 
+	{
+		
+		for (Marker qm : markers) 
+		{
+			if (LC.getClicked()) {
+				LC.setHidden(false);
+				qm.setHidden(true);
+				//System.out.println("test");
+			}
+			else {
+				qm.setHidden(true);
+				//System.out.println("test2");
+			}
+		}
+		
+	}
+		
+	
+	
+	
+	private void isClicked (List<Marker> markers) {
+		for (Marker mk : markers) {
+		lastClicked = (CommonMarker) mk;
+		if (lastClicked.isSelected()) {
+			if (lastClicked.getClicked()) {
+				lastClicked.setClicked(true);
+				System.out.println("testLastclicked");
+		}
+		}
+		}
 	}
 	
 	
+
+
+
 	// loop over and unhide all markers
 	private void unhideMarkers() {
 		for(Marker marker : quakeMarkers) {
@@ -349,5 +453,58 @@ public class EarthquakeCityMap extends PApplet {
 		return false;
 	}
 		
+	/*for (Marker qm : quakeMarkers) {
+	
+	if (((CommonMarker) qm).getClicked()) {
+	
+		qm.setHidden(false);
+		
+		
+	}
+	else {
+	qm.setHidden(true);
+	lastClicked.setHidden(false);
+	lastClicked = null;
+}
+	
+}
+
+for (Marker cm : cityMarkers) {
+	if (((CommonMarker) cm).getClicked()) {
+		cm.setHidden(false);
+		
+	}
+	else {
+	cm.setHidden(true);
+	lastClicked.setHidden(false);
+	lastClicked = null;
+	}
+}*/
+	
+	/*private void isHidden() {
+	// TODO Auto-generated method stub
+	for(Marker mk : quakeMarkers) {
+		
+		
+		if(lastClicked.getClicked()) {
+			
+			mk.setHidden(false);
+		}
+		else {
+			mk.setHidden(true);
+		}
+	}
+	for(Marker mk : cityMarkers) {
+		
+		if(lastClicked.getClicked()) {
+			
+			mk.setHidden(false);
+		}
+		else {
+			mk.setHidden(true);
+		}
+	}
+	
+}*/
 
 }
