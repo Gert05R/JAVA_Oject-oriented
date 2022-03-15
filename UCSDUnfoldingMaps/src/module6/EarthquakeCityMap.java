@@ -2,6 +2,7 @@ package module6;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
@@ -82,7 +83,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
 		//earthquakesURL = "quiz2.atom";
@@ -124,6 +125,7 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
+	    sortAndPrint(8);
 	    
 	}  // End setup
 	
@@ -137,7 +139,44 @@ public class EarthquakeCityMap extends PApplet {
 	
 	
 	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
+	/*private void sortAndPrint(int numToPrint) {
+		
+		EarthquakeMarker [] sortList = new EarthquakeMarker [quakeMarkers.size()]; 
+		sortList = (EarthquakeMarker[]) quakeMarkers.toArray();
+		
+		Arrays.sort(sortList);
+		
+		for (int i=0; i<numToPrint; i++) {
+			if (i> sortList.length) {
+				break;
+			}
+			System.out.println(sortList[i]);
+		
+		
+		}
+		
+	}*/
+	
+	private void sortAndPrint(int numToPrint) {
+		List<EarthquakeMarker> quakeMarkerList = new ArrayList<EarthquakeMarker>();
+		EarthquakeMarker eqm;
+		for (Marker m :quakeMarkers) {
+			eqm = (EarthquakeMarker)m;
+			quakeMarkerList.add(eqm);
+		}
+		Collections.sort((List<EarthquakeMarker>)quakeMarkerList);
+		for (int i=0; i<numToPrint; i++) {
+			if (i> quakeMarkerList.size()) {
+				break;
+			}
+			System.out.println(quakeMarkerList.get(i));
+		
+		
+		}
+		}
+		
+	
+	
 	// and then call that method from setUp
 	
 	/** Event handler that gets called automatically when the 
