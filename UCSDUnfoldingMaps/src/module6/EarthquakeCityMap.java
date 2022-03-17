@@ -13,11 +13,15 @@ import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.AbstractShapeMarker;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
+import de.fhpotsdam.unfolding.providers.AbstractMapProvider;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.Microsoft;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
+import processing.core.PConstants;
+import processing.core.PGraphics;
 
 /** EarthquakeCityMap
  * An application with an interactive map displaying earthquake data.
@@ -65,6 +69,8 @@ public class EarthquakeCityMap extends PApplet {
 	// NEW IN MODULE 5
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
+	private int countQuakes;
+	
 	
 	public void setup() {		
 		// (1) Initializing canvas and map tiles
@@ -74,7 +80,9 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			AbstractMapProvider provider = new Microsoft.RoadProvider();
+			//AbstractMapProvider provider = new Google.GoogleMapProvider();
+			map = new UnfoldingMap(this, 200, 50, 650, 600, provider);
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -83,7 +91,7 @@ public class EarthquakeCityMap extends PApplet {
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
 		//earthquakesURL = "test1.atom";
-		earthquakesURL = "test2.atom";
+		//earthquakesURL = "test2.atom";
 		
 		// Uncomment this line to take the quiz
 		//earthquakesURL = "quiz2.atom";
@@ -126,6 +134,7 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(cityMarkers);
 	    
 	    sortAndPrint(8);
+	   
 	    
 	}  // End setup
 	
@@ -135,27 +144,11 @@ public class EarthquakeCityMap extends PApplet {
 		map.draw();
 		addKey();
 		
+		if (lastClicked != null) {
+			showPopUp();
+		}
 	}
 	
-	
-	// TODO: Add the method:
-	/*private void sortAndPrint(int numToPrint) {
-		
-		EarthquakeMarker [] sortList = new EarthquakeMarker [quakeMarkers.size()]; 
-		sortList = (EarthquakeMarker[]) quakeMarkers.toArray();
-		
-		Arrays.sort(sortList);
-		
-		for (int i=0; i<numToPrint; i++) {
-			if (i> sortList.length) {
-				break;
-			}
-			System.out.println(sortList[i]);
-		
-		
-		}
-		
-	}*/
 	
 	private void sortAndPrint(int numToPrint) {
 		List<EarthquakeMarker> quakeMarkerList = new ArrayList<EarthquakeMarker>();
@@ -231,9 +224,55 @@ public class EarthquakeCityMap extends PApplet {
 		{
 			checkEarthquakesForClick();
 			if (lastClicked == null) {
+				countEarthquakes(); //New line to count all earthquakes
+				
 				checkCitiesForClick();
+				
 			}
 		}
+	}
+	
+	private void countEarthquakes() 
+	{	
+		if (lastClicked != null) return;
+		// loop over the city Markers if one of them is selected
+		for (Marker marker : cityMarkers) 
+		{
+			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) //Means the marker is selected
+			{ 
+				countQuakes = 0;
+			
+				for (Marker count : quakeMarkers) 
+				{
+					EarthquakeMarker quakeMarker = (EarthquakeMarker)count;
+					if (quakeMarker.getDistanceTo(marker.getLocation()) 
+							< quakeMarker.threatCircle()) 
+					{
+						countQuakes +=1;
+					}
+				
+				}
+			}
+		}
+		System.out.println("This is the amount of Quakes " + countQuakes);
+		
+	}
+	
+	public void showPopUp()
+	{
+		
+		fill(255, 250, 240);
+		
+		int xbase = 25;
+		int ybase = 350;
+		
+		rect(xbase, ybase, 150, 250);
+		
+		fill(0);
+		textAlign(LEFT, CENTER);
+		textSize(12);
+		text("Earthquake Key", xbase+25, ybase+25);
+	
 	}
 	
 	// Helper method that will check if a city marker was clicked on
@@ -244,6 +283,7 @@ public class EarthquakeCityMap extends PApplet {
 		// Loop over the earthquake markers to see if one of them is selected
 		for (Marker marker : cityMarkers) {
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
+				
 				lastClicked = (CommonMarker)marker;
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : cityMarkers) {
@@ -262,6 +302,10 @@ public class EarthquakeCityMap extends PApplet {
 			}
 		}		
 	}
+	
+
+
+	
 	
 	// Helper method that will check if an earthquake marker was clicked on
 	// and respond appropriately

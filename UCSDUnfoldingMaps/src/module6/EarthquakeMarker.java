@@ -70,11 +70,6 @@ public abstract class EarthquakeMarker extends CommonMarker implements Comparabl
 		return 0;
 	}
 	
-	/*public int compareTo(EarthquakeMarker marker) {
-		
-		return (this.getProperty("magnitude").toString()).compareTo(marker.getProperty("magnidue").toString());
-	}*/
-	
 	
 	// calls abstract method drawEarthquake and then checks age and draws X if needed
 	@Override
@@ -130,6 +125,7 @@ public abstract class EarthquakeMarker extends CommonMarker implements Comparabl
 		pg.popStyle();
 		
 	}
+	
 
 	
 	/**
