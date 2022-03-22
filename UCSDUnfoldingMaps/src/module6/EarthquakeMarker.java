@@ -1,5 +1,8 @@
 package module6;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.fhpotsdam.unfolding.data.PointFeature;
 import processing.core.PConstants;
 import processing.core.PGraphics;
@@ -111,6 +114,7 @@ public abstract class EarthquakeMarker extends CommonMarker implements Comparabl
 		String title = getTitle();
 		pg.pushStyle();
 		
+		
 		pg.rectMode(PConstants.CORNER);
 		
 		pg.stroke(110);
@@ -191,6 +195,8 @@ public abstract class EarthquakeMarker extends CommonMarker implements Comparabl
 	{
 		return isOnLand;
 	}
+	
+
 	
 
 	

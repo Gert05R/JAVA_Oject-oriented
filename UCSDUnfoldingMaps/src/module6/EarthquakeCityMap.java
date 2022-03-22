@@ -70,6 +70,7 @@ public class EarthquakeCityMap extends PApplet {
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
 	private int countQuakes;
+	private float magnitudes;
 	
 	
 	public void setup() {		
@@ -81,6 +82,7 @@ public class EarthquakeCityMap extends PApplet {
 		}
 		else {
 			AbstractMapProvider provider = new Microsoft.RoadProvider();
+			
 			//AbstractMapProvider provider = new Google.GoogleMapProvider();
 			map = new UnfoldingMap(this, 200, 50, 650, 600, provider);
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
@@ -144,7 +146,7 @@ public class EarthquakeCityMap extends PApplet {
 		map.draw();
 		addKey();
 		
-		if (lastClicked != null) {
+		if (lastClicked != null && cityMarkers.contains(lastClicked)) {
 			showPopUp();
 		}
 	}
@@ -249,6 +251,11 @@ public class EarthquakeCityMap extends PApplet {
 							< quakeMarker.threatCircle()) 
 					{
 						countQuakes +=1;
+						float average = ((EarthquakeMarker) quakeMarker).getMagnitude();
+						//System.out.println("individual " +average);
+						magnitudes += average;
+						//System.out.println("Magnitudes: " + magnitudes);
+						//System.out.println(quakeMarker.getDate());
 					}
 				
 				}
@@ -257,6 +264,8 @@ public class EarthquakeCityMap extends PApplet {
 		System.out.println("This is the amount of Quakes " + countQuakes);
 		
 	}
+	
+	
 	
 	public void showPopUp()
 	{
@@ -271,7 +280,14 @@ public class EarthquakeCityMap extends PApplet {
 		fill(0);
 		textAlign(LEFT, CENTER);
 		textSize(12);
-		text("Earthquake Key", xbase+25, ybase+25);
+		CityMarker city = (CityMarker) lastClicked;
+		text("Current city " +city.getCity(), xbase+25, ybase+25);
+		text("Earthquakes nearby: ", xbase+25, ybase+45);
+		text("# " + countQuakes, xbase+25, ybase+65);
+		text("Average Magnitude: ", xbase+25, ybase+85);
+		text (magnitudes/countQuakes, xbase+25, ybase+105);
+		
+		
 	
 	}
 	

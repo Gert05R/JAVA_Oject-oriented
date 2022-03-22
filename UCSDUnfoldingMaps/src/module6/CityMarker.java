@@ -72,7 +72,7 @@ public class CityMarker extends CommonMarker {
 	
 	
 	
-	private String getCity()
+	public String getCity()
 	{
 		return getStringProperty("name");
 	}
@@ -86,4 +86,5 @@ public class CityMarker extends CommonMarker {
 	{
 		return Float.parseFloat(getStringProperty("population"));
 	}
+	
 }
