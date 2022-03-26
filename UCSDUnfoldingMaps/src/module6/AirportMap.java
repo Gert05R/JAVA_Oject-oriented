@@ -30,10 +30,12 @@ public class AirportMap extends PApplet {
 	UnfoldingMap map;
 	private List<Marker> airportList;
 	List<Marker> routeList;
+	List<Marker> routeListX;
 	public static int TRI_SIZE = 5;
 	protected boolean clicked = false;
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
+	private HashMap<Integer, Location> airports;
 	
 	public void setup() {
 		// setting up PAppler
@@ -41,8 +43,9 @@ public class AirportMap extends PApplet {
 		
 		// setting up map and default events
 		AbstractMapProvider provider = new Microsoft.RoadProvider();
-		map = new UnfoldingMap(this, 50, 50, 750, 550, provider);
-		map.zoomToLevel(2);
+		//map = new UnfoldingMap(this, 50, 50, 750, 550, provider);
+		map = new UnfoldingMap(this, 200, 50, 650, 600, provider);
+		//map.zoomToLevel(2);
 		MapUtils.createDefaultEventDispatcher(this, map);
 		
 		
@@ -51,7 +54,7 @@ public class AirportMap extends PApplet {
 		
 		// list for markers, hashmap for quicker access when matching with routes
 		airportList = new ArrayList<Marker>();
-		HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
+		airports = new HashMap<Integer, Location>();
 		
 		// create markers from features
 		for(PointFeature feature : features) {
@@ -60,6 +63,8 @@ public class AirportMap extends PApplet {
 			//m.setRadius(5);
 			airportList.add(m);
 			
+			//System.out.println("getid " +Integer.parseInt(feature.getId()));
+			//System.out.println("getLoc " +feature.getLocation());
 			// put airport in hashmap with OpenFlights unique id for key
 			airports.put(Integer.parseInt(feature.getId()), feature.getLocation());
 		
@@ -83,19 +88,32 @@ public class AirportMap extends PApplet {
 			
 			SimpleLinesMarker sl = new SimpleLinesMarker(route.getLocations(), route.getProperties());
 		
-			System.out.println(sl.getProperties());
+			//System.out.println(route.getLocations());
+			//System.out.println(sl.getProperties());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-			//routeList.add(sl);
+			routeList.add(sl);
 		}
 		
+		/*for(Marker route : routeList) {
+			
+			SimpleLinesMarker sl = (SimpleLinesMarker) route;
+			
+		System.out.println(sl.getLocations());
+			
+		}*/
 		
-		
+		/*for(Marker airport : airportList) 
+		{
+			
+			System.out.println( "test" + airport.getLocation());
+			
+		}*/
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
 		//map.addMarkers(routeList);
-		
+		//System.out.println("Test1" + airports.keySet());
 		map.addMarkers(airportList);
-
+		
 		
 	}
 	
@@ -151,11 +169,15 @@ public class AirportMap extends PApplet {
 	{
 		if (lastClicked != null) {
 			unhideMarkers();
+			hideRoutes(); 
 			lastClicked = null;
+			
 		}
 		else if (lastClicked == null) 
 		{
 			checkAirportsForClick();
+			
+			
 		}
 	}
 	
@@ -166,6 +188,19 @@ public class AirportMap extends PApplet {
 			
 	}
 	
+	private void hideRoutes() 
+	{
+		if (lastClicked == null) return;
+		if (lastClicked != null) 
+		{
+		for (Marker route: routeList) 
+		{
+			route.setHidden(true);
+		}
+		
+		}
+	}
+	
 	private void checkAirportsForClick()
 	{
 		if (lastClicked != null) return;
@@ -174,16 +209,27 @@ public class AirportMap extends PApplet {
 			AirportMarker marker = (AirportMarker)m;
 			if (!marker.isHidden() && marker.isInside(map, mouseX, mouseY)) {
 				lastClicked = marker;
+				for (Marker route: routeList) 
+				{
+					SimpleLinesMarker sl = (SimpleLinesMarker) route;
+					if (sl.getLocations().contains(lastClicked.getLocation())) 
+					{
+						map.addMarkers(route);
+						route.setHidden(false);
+						System.out.println("Test1");
+					}
+					
+				}
 				// Hide all the other earthquakes and hide
 				for (Marker mhide : airportList) {
 					if (mhide != lastClicked) {
 						mhide.setHidden(true);
+						//testing();
+						
 					}
 				}
 				return;
 			}
 		}
 	}
-	
-
 }

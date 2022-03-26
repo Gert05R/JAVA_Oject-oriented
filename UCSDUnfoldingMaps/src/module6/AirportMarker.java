@@ -47,18 +47,24 @@ public static int TRI_SIZE = 5;  // The size of the triangle marker
 	public void showTitle(PGraphics pg, float x, float y)
 	{
 		String name = getName();
-		String pop = getCountry();
+		String country = getCountry();
+		String city = getCity();
+		String code = getCode();
 		
 		pg.pushStyle();
 		
 		pg.fill(255, 255, 255);
-		pg.textSize(12);
+		pg.textSize(16);
 		pg.rectMode(PConstants.CORNER);
-		pg.rect(x, y-TRI_SIZE-39, Math.max(pg.textWidth(name), pg.textWidth(pop)) + 6, 39);
+		pg.rect(x, y-TRI_SIZE-39, Math.max(pg.textWidth(name), pg.textWidth(country)) + 20, 80);
+		//pg.rect(x, y-TRI_SIZE-39, Math.max(pg.textWidth(city), pg.textWidth(code)) + 6, 39);
 		pg.fill(0, 0, 0);
 		pg.textAlign(PConstants.LEFT, PConstants.TOP);
+		
 		pg.text(name, x+3, y-TRI_SIZE-33);
-		pg.text(pop, x+3, y - TRI_SIZE -18);
+		pg.text(country, x+3, y - TRI_SIZE -18);
+		pg.text(city, x+3, y - TRI_SIZE -3);
+		pg.text(code, x+3, y - TRI_SIZE +12);
 		
 		pg.popStyle();
 	}
@@ -75,5 +81,13 @@ public static int TRI_SIZE = 5;  // The size of the triangle marker
 		return getStringProperty("country");
 	}
 	
+	private String getCity()
+	{
+		return getStringProperty("city");
+	}
+	private String getCode()
+	{
+		return getStringProperty("code");
+	}
 
 }
